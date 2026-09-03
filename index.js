@@ -230,6 +230,28 @@
     renderHistory();
   }
 
+  function attachRepeat(selector, fn) {
+    const el = $(selector);
+    let timer = null;
+    let interval = null;
+    const start = (e) => {
+      if (e.button !== undefined && e.button !== 0) return;
+      e.preventDefault();
+      fn();
+      timer = setTimeout(() => {
+        interval = setInterval(fn, 80);
+      }, 350);
+    };
+    const stop = () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+    el.addEventListener("mousedown", start);
+    ["mouseup", "mouseleave", "mouseout"].forEach((t) => el.addEventListener(t, stop));
+    el.addEventListener("touchstart", (e) => start(e), { passive: false });
+    ["touchend", "touchcancel"].forEach((t) => el.addEventListener(t, stop));
+  }
+
   function copyValue() {
     navigator.clipboard.writeText(counter).then(() => {
       const btn = $("#copy-btn");
@@ -310,8 +332,8 @@
     }
   }
 
-  $("#increase").addEventListener("click", increment);
-  $("#decrease").addEventListener("click", decrement);
+  attachRepeat("#increase", increment);
+  attachRepeat("#decrease", decrement);
   $("#reset").addEventListener("click", reset);
   $("#copy-btn").addEventListener("click", copyValue);
   $("#theme-toggle").addEventListener("click", toggleTheme);
