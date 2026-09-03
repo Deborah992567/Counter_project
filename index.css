@@ -583,6 +583,14 @@ header h1 {
   color: var(--warning);
 }
 
+.stat-value.primary {
+  color: var(--primary);
+}
+
+.stat-value.neutral {
+  color: var(--text);
+}
+
 .stat-label {
   font-size: 0.68rem;
   text-transform: uppercase;

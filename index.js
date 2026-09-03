@@ -8,7 +8,7 @@
   let maxBound = localStorage.getItem("maxBound") ? parseInt(localStorage.getItem("maxBound"), 10) : 1000;
   const history = [];
   const undoStack = [];
-  const stats = { inc: 0, dec: 0, reset: 0 };
+  const stats = { inc: 0, dec: 0, reset: 0, peak: 0, low: 0, total: 0 };
   let soundEnabled = localStorage.getItem("sound") !== "off";
 
   const $ = (sel) => document.querySelector(sel);
@@ -70,6 +70,9 @@
     else if (type === "dec") playTone(340);
     else if (type === "reset") playTone(220, 0.12, "triangle");
     else if (type === "undo") playTone(400, 0.08, "triangle");
+    if (navigator.vibrate) {
+      navigator.vibrate(type === "inc" || type === "dec" ? 10 : 20);
+    }
   }
 
   function updateMilestone() {
@@ -135,6 +138,9 @@
     $("#stat-inc").textContent = stats.inc;
     $("#stat-dec").textContent = stats.dec;
     $("#stat-reset").textContent = stats.reset;
+    $("#stat-peak").textContent = stats.peak;
+    $("#stat-low").textContent = stats.low;
+    $("#stat-total").textContent = stats.total;
   }
 
   function checkBounds(next) {
@@ -151,6 +157,8 @@
     }
     counter = next;
     stats.inc++;
+    stats.total++;
+    if (counter > stats.peak) stats.peak = counter;
     const actual = next - old;
     updateDisplay();
     addHistory("Increment", actual, old);
@@ -167,6 +175,8 @@
     }
     counter = next;
     stats.dec++;
+    stats.total++;
+    if (counter < stats.low) stats.low = counter;
     const actual = next - old;
     updateDisplay();
     addHistory("Decrement", actual, old);
@@ -183,6 +193,7 @@
     undoStack.push({ prev, action: "Reset" });
     counter = 0;
     stats.reset++;
+    stats.total++;
     updateDisplay();
     addHistory("Reset", prev, prev);
     playSound("reset");
@@ -435,6 +446,9 @@
     stats.inc = 0;
     stats.dec = 0;
     stats.reset = 0;
+    stats.peak = 0;
+    stats.low = 0;
+    stats.total = 0;
     localStorage.clear();
     stepInput.value = 1;
     showToast("All data reset");
