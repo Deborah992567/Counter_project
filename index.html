@@ -1,18 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Counter</title>
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
-<h1>Counter: <br><span id="counter">0</span></h1>
-<button id="decrease">-</button>
-<button id="reset">Reset</button>
-<button id="increase">+</button>
-  
+  <div class="app" id="app">
+    <header>
+      <h1>Counter</h1>
+      <button id="theme-toggle" class="icon-btn" title="Toggle dark mode (D)">&#9789;</button>
+    </header>
 
-  
+    <div class="card main-card">
+      <div class="counter-display" id="counter-display">0</div>
+      <div class="counter-buttons">
+        <button id="decrease" class="btn btn-dec" title="Decrease (-)">&minus;</button>
+        <button id="reset" class="btn btn-reset" title="Reset (0)">Reset</button>
+        <button id="increase" class="btn btn-inc" title="Increase (+)">+</button>
+      </div>
+    </div>
 
+    <div class="controls-row">
+      <div class="card control-card">
+        <label for="step-input">Step Size</label>
+        <div class="step-control">
+          <button id="step-down" class="btn-sm" title="Decrease step">&minus;</button>
+          <input type="number" id="step-input" value="1" min="1" max="100">
+          <button id="step-up" class="btn-sm" title="Increase step">+</button>
+        </div>
+      </div>
+      <div class="card control-card">
+        <label for="copy-btn">Copy Value</label>
+        <button id="copy-btn" class="btn-action">Copy</button>
+      </div>
+    </div>
+
+    <div class="card history-card">
+      <div class="card-header">
+        <h2>History</h2>
+        <button id="clear-history" class="btn-sm">Clear</button>
+      </div>
+      <ul id="history-list" class="history-list">
+        <li class="history-empty">No changes yet</li>
+      </ul>
+    </div>
+
+    <div class="keyboard-hint">
+      <span><kbd>+</kbd> Increase</span>
+      <span><kbd>-</kbd> Decrease</span>
+      <span><kbd>0</kbd> Reset</span>
+      <span><kbd>D</kbd> Dark mode</span>
+    </div>
+  </div>
   <script src="index.js"></script>
 </body>
 </html>

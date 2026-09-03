@@ -1,78 +1,382 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f0f2f5;
+  --surface: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --danger: #dc2626;
+  --danger-hover: #b91c1c;
+  --success: #16a34a;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.2s ease;
+}
+
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #334155;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --danger: #ef4444;
+  --danger-hover: #f87171;
+  --success: #22c55e;
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-  }
-  
-  #counter {
-    font-size: 48px;
-    font-weight: bold;
-    color: #00698f;
-  }
-  
-  button {
-    width: 100px;
-    height: 46px;
-    font-size: 24px;
-    border-radius: 8px;
-    background-color: #4CAF50;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color:darkcyan;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  transition: background var(--transition), color var(--transition);
+}
+
+.app {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.icon-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.icon-btn:hover {
+  background: var(--border);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.main-card {
+  text-align: center;
+  padding: 32px 20px;
+}
+
+.counter-display {
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 24px;
+  letter-spacing: -0.03em;
+  transition: color var(--transition), transform 0.15s ease;
+  user-select: none;
+}
+
+.counter-display.positive {
+  color: var(--success);
+}
+
+.counter-display.negative {
+  color: var(--danger);
+}
+
+.counter-display.neutral {
+  color: var(--text);
+}
+
+.counter-display.bump {
+  transform: scale(1.08);
+}
+
+.counter-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn {
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 12px 0;
+  transition: background var(--transition), transform 0.1s ease;
+  flex: 1;
+  max-width: 120px;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-dec {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-dec:hover {
+  background: var(--danger-hover);
+}
+
+.btn-inc {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-inc:hover {
+  background: var(--primary-hover);
+}
+
+.btn-reset {
+  background: var(--border);
+  color: var(--text);
+}
+
+.btn-reset:hover {
+  background: var(--text-secondary);
+  color: var(--surface);
+}
+
+.controls-row {
+  display: flex;
+  gap: 12px;
+}
+
+.control-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.control-card label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.step-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.step-control input {
+  width: 52px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color var(--transition);
+  -moz-appearance: textfield;
+}
+
+.step-control input::-webkit-inner-spin-button,
+.step-control input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.step-control input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.btn-sm {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition);
+}
+
+.btn-sm:hover {
+  background: var(--border);
+}
+
+.btn-action {
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  align-self: flex-start;
+}
+
+.btn-action:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-action.copied {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.history-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.history-card h2 {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.history-list {
+  list-style: none;
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.history-list li {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--bg);
+  display: flex;
+  justify-content: space-between;
+  transition: background var(--transition);
+}
+
+.history-list li .change {
+  font-weight: 600;
+}
+
+.history-list li .change.positive {
+  color: var(--success);
+}
+
+.history-list li .change.negative {
+  color: var(--danger);
+}
+
+.history-empty {
+  color: var(--text-secondary) !important;
+  text-align: center;
+  background: transparent !important;
+  font-style: italic;
+}
+
+.keyboard-hint {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.keyboard-hint span {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-family: inherit;
+  font-weight: 600;
+  box-shadow: 0 1px 0 var(--border);
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 20px 12px;
   }
 
-  @media only screen and (min-width: 1200px) {
-    body {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+  .counter-display {
+    font-size: 4rem;
   }
-  
 
-  @media only screen and (min-width: 992px) and (max-width: 1199px) {
-    body {
-      max-width: 992px;
-      margin: 0 auto;
-    }
+  .controls-row {
+    flex-direction: column;
   }
-  
-  
-  @media only screen and (min-width: 768px) and (max-width: 991px) {
-    body {
-      max-width: 768px;
-      margin: 0 auto;
-    }
-    button {
-      width: 80px;
-      height: 30px;
-      font-size: 18px;
-    }
-  }
-  
-  
-  @media only screen and (min-width: 480px) and (max-width: 767px) {
-    body {
-      max-width: 480px;
-      margin: 0 auto;
-    }
-    button {
-      width: 60px;
-      height: 25px;
-      font-size: 14px;
-    }
-  }
-  
-  
-  @media only screen and (max-width: 479px) {
-    body {
-      max-width: 320px;
-      margin: 0 auto;
-    }
-    button {
-        width: 80px;
-        height: 30px;
-        font-size: 18px;
-      }
-    }
+}
