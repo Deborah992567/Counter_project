@@ -172,7 +172,7 @@
     updateDisplay();
     addHistory("Increment", actual, old);
     playSound("inc");
-    afterChange();
+    afterChange(old);
   }
 
   function decrement() {
@@ -191,7 +191,7 @@
     updateDisplay();
     addHistory("Decrement", actual, old);
     playSound("dec");
-    afterChange();
+    afterChange(old);
   }
 
   function reset() {
@@ -209,10 +209,11 @@
     playSound("reset");
   }
 
-  function afterChange() {
-    if (counter === 999 || counter === -999) {
+  function afterChange(prev) {
+    if (counter !== 0 && Math.abs(counter) % 100 === 0 && Math.abs(prev) < Math.abs(counter)) {
       confetti();
-      showToast(counter === 999 ? "Almost there!" : "");
+      showToast(`Milestone! ${counter}`);
+      return;
     }
     if (counter !== 0 && counter % 500 === 0) {
       confetti();
