@@ -8,6 +8,7 @@
   let maxBound = localStorage.getItem("maxBound") ? parseInt(localStorage.getItem("maxBound"), 10) : 1000;
   const history = [];
   const undoStack = [];
+  let historyFilter = "all";
   const stats = { inc: 0, dec: 0, reset: 0, peak: 0, low: 0, total: 0 };
   let soundEnabled = localStorage.getItem("sound") !== "off";
   let confettiEnabled = localStorage.getItem("confetti") !== "off";
@@ -124,7 +125,15 @@
         '<li class="history-empty">No changes yet</li>';
       return;
     }
-    historyList.innerHTML = history
+    let items = history;
+    if (historyFilter === "inc") items = history.filter((h) => h.action === "Increment");
+    else if (historyFilter === "dec") items = history.filter((h) => h.action === "Decrement");
+    else if (historyFilter === "reset") items = history.filter((h) => h.action === "Reset");
+    if (items.length === 0) {
+      historyList.innerHTML = '<li class="history-empty">No matching entries</li>';
+      return;
+    }
+    historyList.innerHTML = items
       .map((h) => {
         const cls = h.value > 0 ? "positive" : h.value < 0 ? "negative" : "";
         const liClass = h.value > 0 ? " positive" : h.value < 0 ? " negative" : "";
@@ -490,6 +499,15 @@
   }
 
   $("#reset-all").addEventListener("click", resetAll);
+
+  document.querySelectorAll(".filter-chip").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      document.querySelectorAll(".filter-chip").forEach((c) => c.classList.remove("active"));
+      chip.classList.add("active");
+      historyFilter = chip.dataset.filter;
+      renderHistory();
+    });
+  });
 
   $("#clear-history").addEventListener("click", () => {
     history.length = 0;
