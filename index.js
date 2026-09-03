@@ -180,6 +180,37 @@
     }
   }
 
+  function setValue() {
+    const input = document.createElement("input");
+    input.type = "number";
+    input.className = "inline-edit";
+    input.value = counter;
+    counterDisplay.replaceWith(input);
+    input.focus();
+    input.select();
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      const val = parseInt(input.value, 10);
+      const raw = isNaN(val) ? 0 : val;
+      const next = boundsEnabled ? Math.max(minBound, Math.min(maxBound, raw)) : raw;
+      const old = counter;
+      if (!document.contains(input)) return;
+      input.replaceWith(counterDisplay);
+      counter = next;
+      updateDisplay();
+      history.unshift({ action: "Set", value: next, time: new Date().toLocaleTimeString() });
+      if (history.length > 30) history.pop();
+      renderHistory();
+    };
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); finish(); }
+      if (e.key === "Escape") { done = true; if (document.contains(input)) input.replaceWith(counterDisplay); }
+    });
+    input.addEventListener("blur", finish);
+  }
+
   function undo() {
     const last = undoStack.pop();
     if (!last) {
@@ -287,6 +318,7 @@
   $("#undo-btn").addEventListener("click", undo);
   $("#export-history").addEventListener("click", exportCSV);
   $("#bounds-toggle").addEventListener("click", toggleBounds);
+  counterDisplay.addEventListener("dblclick", setValue);
 
   $("#step-down").addEventListener("click", () => {
     step = Math.max(1, getStep() - 1);

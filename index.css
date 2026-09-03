@@ -215,6 +215,30 @@ header h1 {
   transform: scale(1.08);
 }
 
+.inline-edit {
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  width: 100%;
+  border: 2px solid var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  letter-spacing: -0.03em;
+  margin-bottom: 24px;
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+  -moz-appearance: textfield;
+}
+
+.inline-edit::-webkit-inner-spin-button,
+.inline-edit::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
 .counter-buttons {
   display: flex;
   gap: 12px;
