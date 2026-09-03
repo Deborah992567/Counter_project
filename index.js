@@ -150,11 +150,18 @@
     return Math.max(minBound, Math.min(maxBound, next));
   }
 
+  function shake() {
+    counterDisplay.classList.remove("shake");
+    void counterDisplay.offsetWidth;
+    counterDisplay.classList.add("shake");
+  }
+
   function increment() {
     const old = counter;
     const next = checkBounds(counter + step);
     if (next === counter) {
       showToast("Limit reached");
+      shake();
       return;
     }
     counter = next;
@@ -173,6 +180,7 @@
     const next = checkBounds(counter - step);
     if (next === counter) {
       showToast("Limit reached");
+      shake();
       return;
     }
     counter = next;
