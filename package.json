@@ -1,0 +1,11 @@
+{
+  "name": "counter",
+  "version": "1.0.0",
+  "description": "A clean, modern counter app built with vanilla HTML, CSS, and JavaScript.",
+  "scripts": {
+    "test": "node test/smoke.test.js"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^23.0.0"
+  }
+}
