@@ -239,6 +239,34 @@ header h1 {
   -webkit-appearance: none;
 }
 
+.milestone-progress {
+  margin: -8px 0 24px;
+}
+
+.milestone-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.milestone-fill {
+  height: 100%;
+  width: 0;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.milestone-label {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
 .counter-buttons {
   display: flex;
   gap: 12px;

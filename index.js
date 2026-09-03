@@ -20,6 +20,8 @@
   const boundsToggle = $("#bounds-toggle");
   const minInput = $("#min-input");
   const maxInput = $("#max-input");
+  const milestoneFill = $("#milestone-fill");
+  const milestoneLabel = $("#milestone-label");
 
   const COLORS = ["#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#8b5cf6", "#06b6d4"];
 
@@ -70,11 +72,25 @@
     else if (type === "undo") playTone(400, 0.08, "triangle");
   }
 
+  function updateMilestone() {
+    const next = Math.abs(counter) >= 100
+      ? Math.sign(counter) === -1
+        ? -Math.floor(Math.abs(counter) / 100) * 100 - 100
+        : Math.floor(Math.abs(counter) / 100) * 100 + 100
+      : 100;
+    const prev = next - Math.sign(next || 1) * 100;
+    const abs = Math.abs(counter);
+    const pct = abs === 0 ? 0 : ((abs % 100) / 100) * 100;
+    milestoneFill.style.width = pct + "%";
+    milestoneLabel.textContent = `Next: ${next}`;
+  }
+
   function updateDisplay() {
     counterDisplay.textContent = counter;
     counterDisplay.className = "counter-display " + getColorClass(counter);
     localStorage.setItem("counter", String(counter));
     document.title = `${counter} - Counter`;
+    updateMilestone();
     bump();
   }
 
