@@ -9,6 +9,7 @@
   const history = [];
   const undoStack = [];
   const stats = { inc: 0, dec: 0, reset: 0 };
+  let soundEnabled = localStorage.getItem("sound") !== "off";
 
   const $ = (sel) => document.querySelector(sel);
   const counterDisplay = $("#counter-display");
@@ -62,6 +63,7 @@
   }
 
   function playSound(type) {
+    if (!soundEnabled) return;
     if (type === "inc") playTone(520);
     else if (type === "dec") playTone(340);
     else if (type === "reset") playTone(220, 0.12, "triangle");
@@ -338,7 +340,17 @@
   $("#copy-btn").addEventListener("click", copyValue);
   $("#theme-toggle").addEventListener("click", toggleTheme);
   $("#undo-btn").addEventListener("click", undo);
+  function toggleSound() {
+    soundEnabled = !soundEnabled;
+    localStorage.setItem("sound", soundEnabled ? "on" : "off");
+    const btn = $("#sound-toggle");
+    btn.textContent = soundEnabled ? "On" : "Off";
+    btn.setAttribute("aria-pressed", String(soundEnabled));
+    showToast(soundEnabled ? "Sound on" : "Sound off");
+  }
+
   $("#export-history").addEventListener("click", exportCSV);
+  $("#sound-toggle").addEventListener("click", toggleSound);
   $("#bounds-toggle").addEventListener("click", toggleBounds);
   counterDisplay.addEventListener("dblclick", setValue);
 
@@ -403,6 +415,14 @@
       case "U":
         undo();
         break;
+      case "c":
+      case "C":
+        copyValue();
+        break;
+      case "e":
+      case "E":
+        exportCSV();
+        break;
     }
   });
 
@@ -413,6 +433,9 @@
   }
 
   stepInput.value = step;
+  const soundBtn = $("#sound-toggle");
+  soundBtn.textContent = soundEnabled ? "On" : "Off";
+  soundBtn.setAttribute("aria-pressed", String(soundEnabled));
   if (boundsEnabled) {
     boundsToggle.textContent = "Disable";
     boundsToggle.setAttribute("aria-expanded", "true");
