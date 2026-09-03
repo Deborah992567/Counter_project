@@ -1,9 +1,11 @@
 (() => {
-  let counter = 0;
-  let step = 1;
-  let boundsEnabled = false;
-  let minBound = -1000;
-  let maxBound = 1000;
+  const savedCounter = parseInt(localStorage.getItem("counter"), 10);
+  let counter = isNaN(savedCounter) ? 0 : savedCounter;
+  const savedStep = parseInt(localStorage.getItem("step"), 10);
+  let step = isNaN(savedStep) || savedStep < 1 ? 1 : Math.min(savedStep, 100);
+  let boundsEnabled = localStorage.getItem("boundsEnabled") === "true";
+  let minBound = localStorage.getItem("minBound") ? parseInt(localStorage.getItem("minBound"), 10) : -1000;
+  let maxBound = localStorage.getItem("maxBound") ? parseInt(localStorage.getItem("maxBound"), 10) : 1000;
   const history = [];
   const undoStack = [];
   const stats = { inc: 0, dec: 0, reset: 0 };
@@ -69,6 +71,8 @@
   function updateDisplay() {
     counterDisplay.textContent = counter;
     counterDisplay.className = "counter-display " + getColorClass(counter);
+    localStorage.setItem("counter", String(counter));
+    document.title = `${counter} - Counter`;
     bump();
   }
 
@@ -249,12 +253,15 @@
 
   function toggleBounds() {
     boundsEnabled = !boundsEnabled;
+    localStorage.setItem("boundsEnabled", String(boundsEnabled));
     boundsToggle.textContent = boundsEnabled ? "Disable" : "Enable";
     boundsToggle.setAttribute("aria-expanded", String(boundsEnabled));
     boundsContent.hidden = !boundsEnabled;
     if (boundsEnabled) {
       minBound = parseInt(minInput.value, 10) || -Infinity;
       maxBound = parseInt(maxInput.value, 10) || Infinity;
+      localStorage.setItem("minBound", String(minBound));
+      localStorage.setItem("maxBound", String(maxBound));
       if (minBound > maxBound) {
         const t = minBound;
         minBound = maxBound;
@@ -284,15 +291,18 @@
   $("#step-down").addEventListener("click", () => {
     step = Math.max(1, getStep() - 1);
     stepInput.value = step;
+    localStorage.setItem("step", String(step));
   });
 
   $("#step-up").addEventListener("click", () => {
     step = Math.min(100, getStep() + 1);
     stepInput.value = step;
+    localStorage.setItem("step", String(step));
   });
 
   stepInput.addEventListener("input", () => {
     step = getStep();
+    localStorage.setItem("step", String(step));
   });
 
   minInput.addEventListener("input", () => {
@@ -348,6 +358,19 @@
     $("#theme-toggle").textContent = "\u2600";
   }
 
+  stepInput.value = step;
+  if (boundsEnabled) {
+    boundsToggle.textContent = "Disable";
+    boundsToggle.setAttribute("aria-expanded", "true");
+    boundsContent.hidden = false;
+    minInput.value = minBound === -Infinity ? "" : minBound;
+    maxInput.value = maxBound === Infinity ? "" : maxBound;
+    if (counter < minBound || counter > maxBound) {
+      counter = Math.max(minBound, Math.min(maxBound, counter));
+    }
+  }
+
+  updateDisplay();
   renderHistory();
   updateStats();
 })();
