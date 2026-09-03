@@ -693,6 +693,17 @@ header h1 {
   color: var(--surface);
 }
 
+.danger-toggle {
+  background: transparent;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+
+.danger-toggle:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
 .keyboard-hint {
   display: flex;
   flex-wrap: wrap;

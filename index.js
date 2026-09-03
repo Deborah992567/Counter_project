@@ -426,6 +426,25 @@
     }
   });
 
+  function resetAll() {
+    if (!confirm("Reset counter, history, stats, and saved preferences?")) return;
+    counter = 0;
+    step = 1;
+    history.length = 0;
+    undoStack.length = 0;
+    stats.inc = 0;
+    stats.dec = 0;
+    stats.reset = 0;
+    localStorage.clear();
+    stepInput.value = 1;
+    showToast("All data reset");
+    updateDisplay();
+    renderHistory();
+    updateStats();
+  }
+
+  $("#reset-all").addEventListener("click", resetAll);
+
   $("#clear-history").addEventListener("click", () => {
     history.length = 0;
     undoStack.length = 0;
