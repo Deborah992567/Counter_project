@@ -10,15 +10,37 @@
   <div class="app" id="app">
     <header>
       <h1>Counter</h1>
-      <button id="theme-toggle" class="icon-btn" title="Toggle dark mode (D)">&#9789;</button>
+      <button id="theme-toggle" class="icon-btn" title="Toggle dark mode (D)" aria-label="Toggle dark mode">&#9789;</button>
     </header>
 
     <div class="card main-card">
-      <div class="counter-display" id="counter-display">0</div>
+      <div class="counter-display" id="counter-display" role="status" aria-live="polite">0</div>
       <div class="counter-buttons">
-        <button id="decrease" class="btn btn-dec" title="Decrease (-)">&minus;</button>
-        <button id="reset" class="btn btn-reset" title="Reset (0)">Reset</button>
-        <button id="increase" class="btn btn-inc" title="Increase (+)">+</button>
+        <button id="decrease" class="btn btn-dec" title="Decrease (-)" aria-label="Decrease by step">&minus;</button>
+        <button id="reset" class="btn btn-reset" title="Reset (0)" aria-label="Reset counter">Reset</button>
+        <button id="increase" class="btn btn-inc" title="Increase (+)" aria-label="Increase by step">+</button>
+      </div>
+      <button id="undo-btn" class="btn-undo" title="Undo (U)" aria-label="Undo last action">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+        Undo
+      </button>
+    </div>
+
+    <div class="card stats-card">
+      <div class="card-subtitle">Statistics</div>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-value increments" id="stat-inc">0</span>
+          <span class="stat-label">Inc</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value decrements" id="stat-dec">0</span>
+          <span class="stat-label">Dec</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value resets" id="stat-reset">0</span>
+          <span class="stat-label">Resets</span>
+        </div>
       </div>
     </div>
 
@@ -26,23 +48,43 @@
       <div class="card control-card">
         <label for="step-input">Step Size</label>
         <div class="step-control">
-          <button id="step-down" class="btn-sm" title="Decrease step">&minus;</button>
-          <input type="number" id="step-input" value="1" min="1" max="100">
-          <button id="step-up" class="btn-sm" title="Increase step">+</button>
+          <button id="step-down" class="btn-sm" title="Decrease step" aria-label="Decrease step size">&minus;</button>
+          <input type="number" id="step-input" value="1" min="1" max="100" aria-label="Step size">
+          <button id="step-up" class="btn-sm" title="Increase step" aria-label="Increase step size">+</button>
         </div>
       </div>
       <div class="card control-card">
         <label for="copy-btn">Copy Value</label>
-        <button id="copy-btn" class="btn-action">Copy</button>
+        <button id="copy-btn" class="btn-action" aria-label="Copy counter value to clipboard">Copy</button>
+      </div>
+    </div>
+
+    <div class="card bounds-card" id="bounds-card">
+      <div class="card-subtitle-row">
+        <span class="card-subtitle">Limits</span>
+        <button id="bounds-toggle" class="range-toggle" aria-expanded="false" aria-controls="bounds-content">Enable</button>
+      </div>
+      <div class="range-cards" id="bounds-content" hidden>
+        <div class="range-card">
+          <label for="min-input">Min</label>
+          <input type="number" id="min-input" placeholder="No limit" value="-1000" aria-label="Minimum counter value">
+        </div>
+        <div class="range-card">
+          <label for="max-input">Max</label>
+          <input type="number" id="max-input" placeholder="No limit" value="1000" aria-label="Maximum counter value">
+        </div>
       </div>
     </div>
 
     <div class="card history-card">
       <div class="card-header">
         <h2>History</h2>
-        <button id="clear-history" class="btn-sm">Clear</button>
+        <div class="history-actions">
+          <button id="export-history" class="btn-sm" title="Export to CSV" aria-label="Export history to CSV">&#11015;</button>
+          <button id="clear-history" class="btn-sm" aria-label="Clear history">Clear</button>
+        </div>
       </div>
-      <ul id="history-list" class="history-list">
+      <ul id="history-list" class="history-list" aria-live="polite">
         <li class="history-empty">No changes yet</li>
       </ul>
     </div>
@@ -51,9 +93,12 @@
       <span><kbd>+</kbd> Increase</span>
       <span><kbd>-</kbd> Decrease</span>
       <span><kbd>0</kbd> Reset</span>
+      <span><kbd>U</kbd> Undo</span>
       <span><kbd>D</kbd> Dark mode</span>
     </div>
   </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="index.js"></script>
 </body>
 </html>

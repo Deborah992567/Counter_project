@@ -1,12 +1,70 @@
 (() => {
   let counter = 0;
   let step = 1;
+  let boundsEnabled = false;
+  let minBound = -1000;
+  let maxBound = 1000;
   const history = [];
+  const undoStack = [];
+  const stats = { inc: 0, dec: 0, reset: 0 };
 
   const $ = (sel) => document.querySelector(sel);
   const counterDisplay = $("#counter-display");
   const historyList = $("#history-list");
   const stepInput = $("#step-input");
+  const toastEl = $("#toast");
+  const boundsContent = $("#bounds-content");
+  const boundsToggle = $("#bounds-toggle");
+  const minInput = $("#min-input");
+  const maxInput = $("#max-input");
+
+  const COLORS = ["#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#8b5cf6", "#06b6d4"];
+
+  function showToast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toastEl.classList.remove("show"), 1500);
+  }
+
+  function confetti() {
+    const count = 60;
+    for (let i = 0; i < count; i++) {
+      const piece = document.createElement("div");
+      piece.className = "confetti-piece";
+      piece.style.left = Math.random() * 100 + "vw";
+      piece.style.width = Math.random() * 8 + 6 + "px";
+      piece.style.height = Math.random() * 10 + 8 + "px";
+      piece.style.background = COLORS[Math.floor(Math.random() * COLORS.length)];
+      piece.style.animationDuration = Math.random() * 2 + 1.5 + "s";
+      piece.style.animationDelay = Math.random() * 0.5 + "s";
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 4500);
+    }
+  }
+
+  function playTone(freq, duration = 0.06, type = "sine") {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + duration);
+    } catch (e) {}
+  }
+
+  function playSound(type) {
+    if (type === "inc") playTone(520);
+    else if (type === "dec") playTone(340);
+    else if (type === "reset") playTone(220, 0.12, "triangle");
+    else if (type === "undo") playTone(400, 0.08, "triangle");
+  }
 
   function updateDisplay() {
     counterDisplay.textContent = counter;
@@ -25,10 +83,12 @@
     setTimeout(() => counterDisplay.classList.remove("bump"), 150);
   }
 
-  function addHistory(action, value) {
+  function addHistory(action, value, oldValue = null) {
     history.unshift({ action, value, time: new Date().toLocaleTimeString() });
-    if (history.length > 20) history.pop();
+    if (history.length > 30) history.pop();
+    if (oldValue !== null) undoStack.push({ prev: oldValue, action });
     renderHistory();
+    updateStats();
   }
 
   function renderHistory() {
@@ -38,32 +98,101 @@
       return;
     }
     historyList.innerHTML = history
-      .map(
-        (h) =>
-          `<li><span>${h.action}</span><span class="change ${
-            h.value > 0 ? "positive" : h.value < 0 ? "negative" : ""
-          }">${h.value > 0 ? "+" : ""}${h.value}</span><span>${h.time}</span></li>`
-      )
+      .map((h) => {
+        const cls = h.value > 0 ? "positive" : h.value < 0 ? "negative" : "";
+        const liClass = h.value > 0 ? " positive" : h.value < 0 ? " negative" : "";
+        const sign = h.value > 0 ? "+" : "";
+        const displayVal =
+          h.action === "Reset" ? `${h.value} \u2192 0` : `${sign}${h.value}`;
+        return `<li class="${liClass}"><span>${h.action}</span><span class="change ${cls}">${displayVal}</span><span>${h.time}</span></li>`;
+      })
       .join("");
   }
 
+  function updateStats() {
+    $("#stat-inc").textContent = stats.inc;
+    $("#stat-dec").textContent = stats.dec;
+    $("#stat-reset").textContent = stats.reset;
+  }
+
+  function checkBounds(next) {
+    if (!boundsEnabled) return next;
+    return Math.max(minBound, Math.min(maxBound, next));
+  }
+
   function increment() {
-    counter += step;
+    const old = counter;
+    const next = checkBounds(counter + step);
+    if (next === counter) {
+      showToast("Limit reached");
+      return;
+    }
+    counter = next;
+    stats.inc++;
+    const actual = next - old;
     updateDisplay();
-    addHistory("Increment", step);
+    addHistory("Increment", actual, old);
+    playSound("inc");
+    afterChange();
   }
 
   function decrement() {
-    counter -= step;
+    const old = counter;
+    const next = checkBounds(counter - step);
+    if (next === counter) {
+      showToast("Limit reached");
+      return;
+    }
+    counter = next;
+    stats.dec++;
+    const actual = next - old;
     updateDisplay();
-    addHistory("Decrement", -step);
+    addHistory("Decrement", actual, old);
+    playSound("dec");
+    afterChange();
   }
 
   function reset() {
+    if (counter === 0) {
+      showToast("Already at zero");
+      return;
+    }
     const prev = counter;
+    undoStack.push({ prev, action: "Reset" });
     counter = 0;
+    stats.reset++;
     updateDisplay();
-    addHistory("Reset", prev);
+    addHistory("Reset", prev, prev);
+    playSound("reset");
+  }
+
+  function afterChange() {
+    if (counter === 999 || counter === -999) {
+      confetti();
+      showToast(counter === 999 ? "Almost there!" : "");
+    }
+    if (counter !== 0 && counter % 500 === 0) {
+      confetti();
+    }
+  }
+
+  function undo() {
+    const last = undoStack.pop();
+    if (!last) {
+      showToast("Nothing to undo");
+      return;
+    }
+    counter = last.prev;
+    updateDisplay();
+    playSound("undo");
+    showToast(`Undid ${last.action}`);
+    history.unshift({
+      action: "Undo",
+      value: last.prev,
+      time: new Date().toLocaleTimeString(),
+    });
+    if (history.length > 30) history.pop();
+    renderHistory();
   }
 
   function copyValue() {
@@ -76,6 +205,30 @@
         btn.classList.remove("copied");
       }, 1200);
     });
+  }
+
+  function exportCSV() {
+    if (history.length === 0) {
+      showToast("No history to export");
+      return;
+    }
+    const rows = [
+      ["Action", "Value", "Time"],
+      ...history.map((h) => [h.action, String(h.value), h.time]),
+    ];
+    const csv = rows
+      .map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "counter-history.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("History exported");
   }
 
   function getStep() {
@@ -94,11 +247,39 @@
     localStorage.setItem("theme", isDark ? "light" : "dark");
   }
 
+  function toggleBounds() {
+    boundsEnabled = !boundsEnabled;
+    boundsToggle.textContent = boundsEnabled ? "Disable" : "Enable";
+    boundsToggle.setAttribute("aria-expanded", String(boundsEnabled));
+    boundsContent.hidden = !boundsEnabled;
+    if (boundsEnabled) {
+      minBound = parseInt(minInput.value, 10) || -Infinity;
+      maxBound = parseInt(maxInput.value, 10) || Infinity;
+      if (minBound > maxBound) {
+        const t = minBound;
+        minBound = maxBound;
+        maxBound = t;
+        minInput.value = minBound;
+        maxInput.value = maxBound;
+      }
+      if (counter < minBound || counter > maxBound) {
+        counter = Math.max(minBound, Math.min(maxBound, counter));
+        updateDisplay();
+      }
+      showToast("Limits enabled");
+    } else {
+      showToast("Limits disabled");
+    }
+  }
+
   $("#increase").addEventListener("click", increment);
   $("#decrease").addEventListener("click", decrement);
   $("#reset").addEventListener("click", reset);
   $("#copy-btn").addEventListener("click", copyValue);
   $("#theme-toggle").addEventListener("click", toggleTheme);
+  $("#undo-btn").addEventListener("click", undo);
+  $("#export-history").addEventListener("click", exportCSV);
+  $("#bounds-toggle").addEventListener("click", toggleBounds);
 
   $("#step-down").addEventListener("click", () => {
     step = Math.max(1, getStep() - 1);
@@ -114,9 +295,27 @@
     step = getStep();
   });
 
+  minInput.addEventListener("input", () => {
+    minBound = parseInt(minInput.value, 10) || -Infinity;
+    if (counter < minBound) {
+      counter = minBound;
+      updateDisplay();
+    }
+  });
+
+  maxInput.addEventListener("input", () => {
+    maxBound = parseInt(maxInput.value, 10) || Infinity;
+    if (counter > maxBound) {
+      counter = maxBound;
+      updateDisplay();
+    }
+  });
+
   $("#clear-history").addEventListener("click", () => {
     history.length = 0;
+    undoStack.length = 0;
     renderHistory();
+    showToast("History cleared");
   });
 
   document.addEventListener("keydown", (e) => {
@@ -136,6 +335,10 @@
       case "D":
         toggleTheme();
         break;
+      case "u":
+      case "U":
+        undo();
+        break;
     }
   });
 
@@ -146,4 +349,5 @@
   }
 
   renderHistory();
+  updateStats();
 })();
