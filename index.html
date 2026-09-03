@@ -15,7 +15,10 @@
   <div class="app" id="app">
     <header>
       <h1>Counter</h1>
-      <button id="theme-toggle" class="icon-btn" title="Toggle dark mode (D)" aria-label="Toggle dark mode">&#9789;</button>
+      <nav class="header-actions">
+        <button id="help-btn" class="icon-btn" title="Keyboard shortcuts (H)" aria-label="Show keyboard shortcuts">?</button>
+        <button id="theme-toggle" class="icon-btn" title="Toggle dark mode (D)" aria-label="Toggle dark mode">&#9789;</button>
+      </nav>
     </header>
 
     <div class="card main-card">
@@ -116,6 +119,28 @@
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="modal-overlay" id="modal-overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="modal-header">
+        <h2 id="help-title">Keyboard Shortcuts</h2>
+        <button id="modal-close" class="icon-btn" aria-label="Close">&times;</button>
+      </div>
+      <ul class="shortcut-list">
+        <li><kbd>+</kbd> / <kbd>=</kbd> <span>Increase</span></li>
+        <li><kbd>-</kbd> <span>Decrease</span></li>
+        <li><kbd>0</kbd> <span>Reset</span></li>
+        <li><kbd>U</kbd> <span>Undo</span></li>
+        <li><kbd>C</kbd> <span>Copy value</span></li>
+        <li><kbd>E</kbd> <span>Export history</span></li>
+        <li><kbd>D</kbd> <span>Toggle dark mode</span></li>
+        <li><kbd>H</kbd> / <kbd>?</kbd> <span>Show this help</span></li>
+        <li><kbd>&#8593;</kbd> / <kbd>&#8595;</kbd> <span>Increase / Decrease</span></li>
+        <li><kbd>Shift</kbd> + <kbd>&#8592;</kbd> / <kbd>&#8594;</kbd> <span>Step down / up</span></li>
+        <li><kbd>Double-click</kbd> display <span>Set value</span></li>
+      </ul>
+    </div>
+  </div>
   <script src="index.js"></script>
 </body>
 </html>

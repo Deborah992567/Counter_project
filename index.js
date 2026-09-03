@@ -311,7 +311,7 @@
     return isNaN(val) || val < 1 ? 1 : Math.min(val, 100);
   }
 
-  function toggleTheme() {
+  function toggleDarkTheme() {
     const isDark =
       document.documentElement.getAttribute("data-theme") === "dark";
     document.documentElement.setAttribute(
@@ -320,6 +320,15 @@
     );
     $("#theme-toggle").textContent = isDark ? "\u263E" : "\u2600";
     localStorage.setItem("theme", isDark ? "light" : "dark");
+  }
+
+  function openHelp() {
+    $("#modal-overlay").hidden = false;
+    $("#modal-close").focus();
+  }
+
+  function closeHelp() {
+    $("#modal-overlay").hidden = true;
   }
 
   function toggleBounds() {
@@ -354,7 +363,12 @@
   attachRepeat("#decrease", decrement);
   $("#reset").addEventListener("click", reset);
   $("#copy-btn").addEventListener("click", copyValue);
-  $("#theme-toggle").addEventListener("click", toggleTheme);
+  $("#theme-toggle").addEventListener("click", toggleDarkTheme);
+  $("#help-btn").addEventListener("click", openHelp);
+  $("#modal-close").addEventListener("click", closeHelp);
+  $("#modal-overlay").addEventListener("click", (e) => {
+    if (e.target.id === "modal-overlay") closeHelp();
+  });
   $("#undo-btn").addEventListener("click", undo);
   function toggleSound() {
     soundEnabled = !soundEnabled;
@@ -425,11 +439,19 @@
         break;
       case "d":
       case "D":
-        toggleTheme();
+        toggleDarkTheme();
         break;
       case "u":
       case "U":
         undo();
+        break;
+      case "h":
+      case "H":
+      case "?":
+        openHelp();
+        break;
+      case "Escape":
+        if (!$("#modal-overlay").hidden) closeHelp();
         break;
       case "c":
       case "C":
