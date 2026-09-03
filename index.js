@@ -10,6 +10,7 @@
   const undoStack = [];
   const stats = { inc: 0, dec: 0, reset: 0, peak: 0, low: 0, total: 0 };
   let soundEnabled = localStorage.getItem("sound") !== "off";
+  let confettiEnabled = localStorage.getItem("confetti") !== "off";
 
   const $ = (sel) => document.querySelector(sel);
   const counterDisplay = $("#counter-display");
@@ -33,6 +34,7 @@
   }
 
   function confetti() {
+    if (!confettiEnabled) return;
     const count = 60;
     for (let i = 0; i < count; i++) {
       const piece = document.createElement("div");
@@ -385,13 +387,34 @@
     soundEnabled = !soundEnabled;
     localStorage.setItem("sound", soundEnabled ? "on" : "off");
     const btn = $("#sound-toggle");
-    btn.textContent = soundEnabled ? "On" : "Off";
-    btn.setAttribute("aria-pressed", String(soundEnabled));
+    btn.setAttribute("aria-checked", String(soundEnabled));
+    btn.classList.toggle("on", soundEnabled);
     showToast(soundEnabled ? "Sound on" : "Sound off");
+  }
+
+  function toggleConfetti() {
+    confettiEnabled = !confettiEnabled;
+    localStorage.setItem("confetti", confettiEnabled ? "on" : "off");
+    const btn = $("#confetti-toggle");
+    btn.setAttribute("aria-checked", String(confettiEnabled));
+    btn.classList.toggle("on", confettiEnabled);
+    showToast(confettiEnabled ? "Confetti on" : "Confetti off");
+  }
+
+  function share() {
+    const text = `My counter is at ${counter}. Count with me!`;
+    if (navigator.share) {
+      navigator.share({ title: "Counter", text }).catch(() => {});
+    } else {
+      copyValue();
+      showToast(`Copied: ${counter}`);
+    }
   }
 
   $("#export-history").addEventListener("click", exportCSV);
   $("#sound-toggle").addEventListener("click", toggleSound);
+  $("#confetti-toggle").addEventListener("click", toggleConfetti);
+  $("#share-btn").addEventListener("click", share);
   $("#bounds-toggle").addEventListener("click", toggleBounds);
   counterDisplay.addEventListener("dblclick", setValue);
 
@@ -538,8 +561,11 @@
 
   stepInput.value = step;
   const soundBtn = $("#sound-toggle");
-  soundBtn.textContent = soundEnabled ? "On" : "Off";
-  soundBtn.setAttribute("aria-pressed", String(soundEnabled));
+  soundBtn.setAttribute("aria-checked", String(soundEnabled));
+  soundBtn.classList.toggle("on", soundEnabled);
+  const confettiBtn = $("#confetti-toggle");
+  confettiBtn.setAttribute("aria-checked", String(confettiEnabled));
+  confettiBtn.classList.toggle("on", confettiEnabled);
   if (boundsEnabled) {
     boundsToggle.textContent = "Disable";
     boundsToggle.setAttribute("aria-expanded", "true");

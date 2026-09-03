@@ -89,12 +89,22 @@
         </div>
       </div>
       <div class="card control-card">
-        <label>Sound</label>
-        <button id="sound-toggle" class="btn-action" aria-label="Toggle sound effects" aria-pressed="false">On</button>
-      </div>
-      <div class="card control-card">
         <label for="copy-btn">Copy Value</label>
         <button id="copy-btn" class="btn-action" aria-label="Copy counter value to clipboard">Copy</button>
+        <label for="share-btn" class="share-label">Share</label>
+        <button id="share-btn" class="btn-action" aria-label="Share counter value">Share</button>
+      </div>
+    </div>
+
+    <div class="card settings-card">
+      <div class="card-subtitle">Settings</div>
+      <div class="settings-row">
+        <span class="settings-label">Sound</span>
+        <button id="sound-toggle" class="switch" role="switch" aria-checked="true" aria-label="Toggle sound"><span class="knob"></span></button>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">Confetti</span>
+        <button id="confetti-toggle" class="switch" role="switch" aria-checked="true" aria-label="Toggle confetti"><span class="knob"></span></button>
       </div>
     </div>
 
