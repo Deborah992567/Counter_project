@@ -423,6 +423,30 @@
       case "E":
         exportCSV();
         break;
+      case "ArrowUp":
+        e.preventDefault();
+        increment();
+        break;
+      case "ArrowDown":
+        e.preventDefault();
+        decrement();
+        break;
+      case "ArrowRight":
+        if (e.shiftKey) {
+          e.preventDefault();
+          step = Math.min(100, getStep() + 1);
+          stepInput.value = step;
+          localStorage.setItem("step", String(step));
+        }
+        break;
+      case "ArrowLeft":
+        if (e.shiftKey) {
+          e.preventDefault();
+          step = Math.max(1, getStep() - 1);
+          stepInput.value = step;
+          localStorage.setItem("step", String(step));
+        }
+        break;
     }
   });
 
