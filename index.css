@@ -379,6 +379,34 @@ header h1 {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
+.step-presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.step-preset {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 5px 0;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition), transform 0.1s ease;
+}
+
+.step-preset:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.step-preset:active {
+  transform: scale(0.94);
+}
+
 .btn-sm {
   border: 1px solid var(--border);
   border-radius: var(--radius-xs);

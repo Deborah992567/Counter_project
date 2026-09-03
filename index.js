@@ -384,6 +384,15 @@
   $("#bounds-toggle").addEventListener("click", toggleBounds);
   counterDisplay.addEventListener("dblclick", setValue);
 
+  document.querySelectorAll(".step-preset").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      step = Math.min(100, Math.max(1, getStep() * parseInt(btn.dataset.mult, 10)));
+      stepInput.value = step;
+      localStorage.setItem("step", String(step));
+      showToast(`Step \u00d7${btn.dataset.mult}`);
+    });
+  });
+
   $("#step-down").addEventListener("click", () => {
     step = Math.max(1, getStep() - 1);
     stepInput.value = step;
