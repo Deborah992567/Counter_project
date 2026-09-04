@@ -153,7 +153,13 @@
     } catch (e) {}
   }
 
+  function updateFilterNote() {
+    const note = $("#filter-note");
+    if (note) note.classList.toggle("visible", historyFilter !== "all");
+  }
+
   function renderHistory() {
+    updateFilterNote();
     if (history.length === 0) {
       historyList.innerHTML =
         '<li class="history-empty">No changes yet</li>';

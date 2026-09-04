@@ -1174,6 +1174,18 @@ kbd {
   border-color: var(--primary);
   color: #fff;
   box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
+  font-weight: 700;
+}
+
+.filter-note {
+  display: none;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin: -6px 0 10px;
+}
+
+.filter-note.visible {
+  display: block;
 }
 
 .settings-label {
