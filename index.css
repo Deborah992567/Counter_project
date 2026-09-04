@@ -29,6 +29,7 @@
   --radius-sm: 10px;
   --radius-xs: 6px;
   --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-mono: "SF Mono", "Fira Code", "Fira Mono", "Roboto Mono", monospace;
 }
 
 [data-theme="dark"] {
