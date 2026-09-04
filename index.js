@@ -24,6 +24,10 @@
   const maxInput = $("#max-input");
   const milestoneFill = $("#milestone-fill");
   const milestoneLabel = $("#milestone-label");
+  const targetInput = $("#target-input");
+  const targetPct = $("#target-pct");
+  const savedTarget = localStorage.getItem("target");
+  let target = savedTarget !== null ? parseInt(savedTarget, 10) : null;
 
   const COLORS = ["#3b82f6", "#ef4444", "#22c55e", "#f59e0b", "#8b5cf6", "#06b6d4"];
 
@@ -75,6 +79,21 @@
     else if (type === "undo") playTone(400, 0.08, "triangle");
     if (navigator.vibrate) {
       navigator.vibrate(type === "inc" || type === "dec" ? 10 : 20);
+    }
+  }
+
+  function updateTarget() {
+    if (target === null || target === 0) {
+      targetPct.textContent = "";
+      return;
+    }
+    const pct = Math.max(0, Math.min(100, Math.round((counter / target) * 100)));
+    targetPct.textContent = pct + "%";
+    if ((counter > 0 && counter >= target) || (counter < 0 && counter <= target)) {
+      targetPct.textContent = "Goal reached!";
+      targetPct.classList.add("goal-reached");
+    } else {
+      targetPct.classList.remove("goal-reached");
     }
   }
 
