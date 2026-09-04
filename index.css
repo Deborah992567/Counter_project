@@ -1143,6 +1143,7 @@ kbd {
   background: var(--primary);
   border-color: var(--primary);
   color: #fff;
+  box-shadow: 0 1px 4px rgba(59, 130, 246, 0.3);
 }
 
 .settings-label {
