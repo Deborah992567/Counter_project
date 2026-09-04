@@ -1149,6 +1149,7 @@ kbd {
 .settings-label {
   font-size: 0.9rem;
   font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .switch {
