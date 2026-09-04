@@ -1070,6 +1070,8 @@ kbd {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
 }
 
 .modal-header h2 {
