@@ -482,6 +482,33 @@ header h1 {
   color: #fff;
 }
 
+.btn-clear {
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--danger);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition), color var(--transition), transform 0.1s ease;
+}
+
+.btn-clear:hover {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-clear:active {
+  transform: scale(0.96);
+}
+
+.btn-clear:focus-visible {
+  outline: 2px solid var(--danger);
+  outline-offset: 2px;
+}
+
 .history-card .card-header {
   display: flex;
   justify-content: space-between;

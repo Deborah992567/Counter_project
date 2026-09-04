@@ -6,7 +6,15 @@
   let boundsEnabled = localStorage.getItem("boundsEnabled") === "true";
   let minBound = localStorage.getItem("minBound") ? parseInt(localStorage.getItem("minBound"), 10) : -1000;
   let maxBound = localStorage.getItem("maxBound") ? parseInt(localStorage.getItem("maxBound"), 10) : 1000;
-  const history = [];
+  const savedHistory = (() => {
+    try {
+      const raw = JSON.parse(localStorage.getItem("history") || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch (e) {
+      return [];
+    }
+  })();
+  const history = savedHistory.slice(0, 30);
   const undoStack = [];
   let historyFilter = "all";
   const stats = { inc: 0, dec: 0, reset: 0, peak: 0, low: 0, total: 0 };
@@ -134,8 +142,15 @@
     history.unshift({ action, value, time: new Date().toLocaleTimeString() });
     if (history.length > 30) history.pop();
     if (oldValue !== null) undoStack.push({ prev: oldValue, action });
+    saveHistory();
     renderHistory();
     updateStats();
+  }
+
+  function saveHistory() {
+    try {
+      localStorage.setItem("history", JSON.stringify(history));
+    } catch (e) {}
   }
 
   function renderHistory() {
@@ -270,6 +285,7 @@
       updateDisplay();
       history.unshift({ action: "Set", value: next, time: new Date().toLocaleTimeString() });
       if (history.length > 30) history.pop();
+      saveHistory();
       renderHistory();
     };
     input.addEventListener("keydown", (e) => {
@@ -295,6 +311,7 @@
       time: new Date().toLocaleTimeString(),
     });
     if (history.length > 30) history.pop();
+    saveHistory();
     renderHistory();
   }
 
@@ -513,6 +530,7 @@
     stepInput.value = 1;
     showToast("All data reset");
     updateDisplay();
+    saveHistory();
     renderHistory();
     updateStats();
   }
@@ -531,6 +549,7 @@
   $("#clear-history").addEventListener("click", () => {
     history.length = 0;
     undoStack.length = 0;
+    saveHistory();
     renderHistory();
     showToast("History cleared");
   });
