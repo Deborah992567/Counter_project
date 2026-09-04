@@ -1092,6 +1092,7 @@ kbd {
   gap: 10px;
   font-size: 0.85rem;
   color: var(--text-secondary);
+  padding: 4px 0;
 }
 
 .shortcut-list li span {
