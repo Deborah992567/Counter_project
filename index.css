@@ -755,13 +755,60 @@ kbd {
   box-shadow: 0 1px 0 var(--border);
 }
 
+@media (max-width: 768px) {
+  body {
+    padding: 30px 16px;
+  }
+
+  .app {
+    max-width: 100%;
+  }
+
+  .counter-display {
+    font-size: 4.5rem;
+  }
+
+  .inline-edit {
+    font-size: 4.5rem;
+  }
+
+  .controls-row {
+    flex-direction: row;
+  }
+
+  .control-card {
+    padding: 14px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .range-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .keyboard-hint {
+    gap: 10px;
+  }
+
+  .keyboard-hint span {
+    font-size: 0.7rem;
+  }
+}
+
 @media (max-width: 480px) {
   body {
     padding: 20px 12px;
   }
 
   .counter-display {
-    font-size: 4rem;
+    font-size: 3.5rem;
+  }
+
+  .inline-edit {
+    font-size: 3.5rem;
   }
 
   .controls-row {
@@ -769,11 +816,183 @@ kbd {
   }
 
   .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .range-cards {
     grid-template-columns: 1fr;
+  }
+
+  .counter-buttons .btn {
+    padding: 12px 0;
+    font-size: 1rem;
+  }
+
+  .btn-undo {
+    margin-top: 10px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+
+  .history-list {
+    max-height: 150px;
+  }
+
+  .keyboard-hint {
+    gap: 8px;
+    padding: 6px 0;
+  }
+
+  .keyboard-hint span {
+    font-size: 0.65rem;
+  }
+
+  kbd {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.6rem;
+    padding: 0 4px;
+  }
+
+  .modal {
+    max-width: 100%;
+    padding: 16px;
+  }
+
+  .filter-row {
+    gap: 4px;
+  }
+
+  .filter-chip {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+  }
+
+  .header-actions {
+    gap: 4px;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  header h1 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 360px) {
+  body {
+    padding: 16px 8px;
+  }
+
+  .counter-display {
+    font-size: 3rem;
+  }
+
+  .inline-edit {
+    font-size: 3rem;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .main-card {
+    padding: 24px 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .stat-item {
+    padding: 8px 6px;
+  }
+
+  .stat-value {
+    font-size: 1.2rem;
+  }
+
+  .stat-label {
+    font-size: 0.6rem;
+  }
+
+  .step-presets {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .counter-buttons {
+    gap: 8px;
+  }
+
+  .btn {
+    font-size: 0.95rem;
+    padding: 10px 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  body {
+    padding: 60px 20px;
+  }
+
+  .app {
+    max-width: 560px;
+  }
+
+  .counter-display {
+    font-size: 6rem;
+  }
+
+  .inline-edit {
+    font-size: 6rem;
+  }
+
+  .main-card {
+    padding: 48px 32px;
+  }
+
+  .btn {
+    padding: 16px 0;
+    font-size: 1.2rem;
+  }
+
+  .history-list {
+    max-height: 280px;
+  }
+
+  .stat-value {
+    font-size: 1.6rem;
+  }
+
+  .keyboard-hint span {
+    font-size: 0.8rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .app {
+    max-width: 640px;
+  }
+
+  .counter-display {
+    font-size: 7rem;
+  }
+
+  .inline-edit {
+    font-size: 7rem;
+  }
+
+  .main-card {
+    padding: 56px 40px;
+  }
+
+  .history-list {
+    max-height: 320px;
   }
 }
 
