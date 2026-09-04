@@ -630,6 +630,7 @@ header h1 {
   transition: opacity var(--transition), transform var(--transition);
   z-index: 100;
   box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px);
 }
 
 .toast.show {
